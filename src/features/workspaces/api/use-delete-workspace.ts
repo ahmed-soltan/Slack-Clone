@@ -10,7 +10,7 @@ type Options = {
   onSuccess?: (response: ResponseType) => void;
   onError?: (error: Error) => void;
   onSettled?: () => void;
-  throwError?: Boolean;
+  throwError?: boolean;
 };
 
 export const useRemoveWorkspace = () => {
