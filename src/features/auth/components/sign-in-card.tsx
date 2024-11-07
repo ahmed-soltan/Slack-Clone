@@ -32,7 +32,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
     e.preventDefault();
     setPending(true);
     void signIn("password", { email, password, flow: "signIn" })
-      .catch((error) => {
+      .catch(() => {
         setError("Invalid Email or Password");
       })
       .finally(() => {

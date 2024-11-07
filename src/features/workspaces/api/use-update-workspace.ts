@@ -36,7 +36,8 @@ export const useUpdateWorkspace = () => {
       setData(response);
       return response;
     } catch (error) {
-      setStatus("error")
+      setStatus("error");
+      setError(error as Error);
       options?.onError?.(error as Error);
       if (options?.throwError) {
         throw error;

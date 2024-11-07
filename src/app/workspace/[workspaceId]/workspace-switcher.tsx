@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +14,7 @@ import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
 import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspace-modal";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
-import { useRouter } from "next/navigation";
+import { Doc } from "../../../../convex/_generated/dataModel";
 
 const WorkspaceSwitcher = () => {
   const { workspaceId } = useWorkspaceId();
@@ -21,11 +22,11 @@ const WorkspaceSwitcher = () => {
   const { data: workspace, isLoading: workspaceLoading } = useGetWorkspace({
     id: workspaceId,
   });
-  const { data: workspaces, isLoading: workspacesLoading } = useGetWorkspaces();
+  const { data: workspaces } = useGetWorkspaces();
   const router = useRouter();
 
   const filteredWorkspaces = workspaces?.filter(
-    (workspace) => workspace?._id !== workspaceId
+    (workspace: Doc<"workspaces">) => workspace?._id !== workspaceId
   );
 
   return (
@@ -47,7 +48,7 @@ const WorkspaceSwitcher = () => {
           <p className="font-semibold">{workspace?.name}</p>
           <span className="text-xs text-slate-600">Active Workspace</span>
         </DropdownMenuItem>
-        {filteredWorkspaces?.map((workspace) => (
+        {filteredWorkspaces?.map((workspace: Doc<"workspaces">) => (
           <DropdownMenuItem
             className="cursor-pointer capitalize"
             onClick={() => router.push(`/workspace/${workspace._id}`)}

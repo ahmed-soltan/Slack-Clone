@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Copy, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 import {
   Dialog,
