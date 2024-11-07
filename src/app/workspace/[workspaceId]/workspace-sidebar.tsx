@@ -87,7 +87,7 @@ const WorkspaceSidebar = () => {
       <WorkspaceSection label="Direct Messages" hint="New Direct Message">
         {members?.map((item) => (
           <UserItem
-            label={item.user?.name!}
+            label={item.user?.name}
             image={item.user?.image}
             id={item._id}
             key={item._id}
