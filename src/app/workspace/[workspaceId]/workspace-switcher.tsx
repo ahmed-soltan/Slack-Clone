@@ -18,7 +18,7 @@ import { Doc } from "../../../../convex/_generated/dataModel";
 
 const WorkspaceSwitcher = () => {
   const { workspaceId } = useWorkspaceId();
-  const [_open, setOpen] = useCreateWorkspaceModal();
+  const [, setOpen] = useCreateWorkspaceModal();
   const { data: workspace, isLoading: workspaceLoading } = useGetWorkspace({
     id: workspaceId,
   });
@@ -50,6 +50,7 @@ const WorkspaceSwitcher = () => {
         </DropdownMenuItem>
         {filteredWorkspaces?.map((workspace: Doc<"workspaces">) => (
           <DropdownMenuItem
+            key={workspace._id}
             className="cursor-pointer capitalize"
             onClick={() => router.push(`/workspace/${workspace._id}`)}
           >
