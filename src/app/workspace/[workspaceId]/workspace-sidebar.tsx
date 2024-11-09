@@ -17,6 +17,7 @@ import WorkspaceSection from "./workspace-section";
 import WorkspaceHeader from "./workspace-header";
 import SidebarItem from "./sidebar-item";
 import UserItem from "./user-item";
+import { useMemberId } from "@/hooks/use-member-id";
 
 const WorkspaceSidebar = () => {
   const { workspaceId } = useWorkspaceId();
@@ -33,6 +34,8 @@ const WorkspaceSidebar = () => {
   const { data: members } = useGetMembers({
     workspaceId,
   });
+
+  const { memberId } = useMemberId();
 
   const { channelId } = useChannelId();
 
@@ -91,6 +94,7 @@ const WorkspaceSidebar = () => {
             image={item.user?.image}
             id={item._id}
             key={item._id}
+            variant={item._id === memberId ? "active" : "default"}
           />
         ))}
       </WorkspaceSection>

@@ -18,6 +18,7 @@ import Reactions from "./reactions";
 
 import { Doc, Id } from "../../convex/_generated/dataModel";
 import { usePanel } from "@/hooks/use-panel";
+import ThreadBar from "./thread-bar";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
@@ -55,6 +56,7 @@ interface MessageProps {
   threadCount?: number;
   threadTimestamp?: number;
   threadImage?: string;
+  threadName?: string;
 }
 const Message = ({
   id,
@@ -74,18 +76,21 @@ const Message = ({
   threadTimestamp,
   threadImage,
   isCompact,
+  threadName,
 }: MessageProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { onOpen, onClose, parentMessageId } = usePanel();
+  const { onOpen, onClose, parentMessageId, profileMemberId, onOpenMemberId } =
+    usePanel();
 
   const { mutate: updateMessage, isPending: isUpdatingMessage } =
     useUpdateMessage();
   const { mutate: removeMessage, isPending: isRemoveMessage } =
     useRemoveMessage();
-  const { mutate: toggleReaction } = useToggleReactions();
+  const { mutate: toggleReaction, isPending: isTogglingReact } =
+    useToggleReactions();
 
-  const isPending = isUpdatingMessage || isRemoveMessage;
+  const isPending = isUpdatingMessage || isRemoveMessage || isTogglingReact;
 
   const avatarFallback = authorName?.charAt(0).toUpperCase();
 
@@ -183,6 +188,13 @@ const Message = ({
                   </span>
                 )}
                 <Reactions data={reactions} onChange={handleReaction} />
+                <ThreadBar
+                  count={threadCount}
+                  timestamp={threadTimestamp}
+                  image={threadImage}
+                  name={threadName}
+                  onClick={() => onOpen(id)}
+                />
               </div>
             )}
           </div>
@@ -220,7 +232,7 @@ const Message = ({
         )}
       >
         <div className="flex items-start gap-2">
-          <button>
+          <button onClick={() => onOpenMemberId(memberId)}>
             <Avatar>
               <AvatarImage src={authorImage} className="rounded-md" />
               <AvatarFallback className="rounded-md bg-sky-700 text-white text-xs">
@@ -242,7 +254,7 @@ const Message = ({
             <div className="flex flex-col w-full overflow-hidden">
               <div className="text-sm">
                 <button
-                  onClick={() => {}}
+                  onClick={() => onOpenMemberId(memberId)}
                   className="font-bold text-black hover:underline"
                 >
                   {authorName}
@@ -263,6 +275,13 @@ const Message = ({
                 </span>
               )}
               <Reactions data={reactions} onChange={handleReaction} />
+              <ThreadBar
+                count={threadCount}
+                timestamp={threadTimestamp}
+                image={threadImage}
+                name={threadName}
+                onClick={() => onOpen(id)}
+              />
             </div>
           )}
         </div>

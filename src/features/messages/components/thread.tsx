@@ -216,6 +216,7 @@ const Thread = ({ messageId, onClose }: ThreadProps) => {
                     reactions={message.reactions}
                     threadCount={message.threadCount}
                     threadImage={message.threadImage}
+                    threadName={message.threadName}
                     threadTimestamp={message.threadTimestamp}
                     createdAt={message._creationTime}
                     updatedAt={message.updatedAt}

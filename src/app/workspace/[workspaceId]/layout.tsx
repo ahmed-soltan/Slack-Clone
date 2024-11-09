@@ -1,26 +1,30 @@
 "use client";
 
+import { Loader } from "lucide-react";
+
 import Toolbar from "./toolbar";
-import Sidebar from "./Sidebar";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import WorkspaceSidebar from "./workspace-sidebar";
-import { usePanel } from "@/hooks/use-panel";
-import { Loader } from "lucide-react";
-import { Id } from "../../../../convex/_generated/dataModel";
+import Profile from "@/features/members/components/profile";
 import Thread from "@/features/messages/components/thread";
+
+import { usePanel } from "@/hooks/use-panel";
+
+import { Id } from "../../../../convex/_generated/dataModel";
+import Sidebar from "./Sidebar";
 
 export default function WorkspaceIdLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { parentMessageId, onClose } = usePanel();
+  const { parentMessageId, onClose, profileMemberId } = usePanel();
 
-  const showPanel = !!parentMessageId;
+  const showPanel = !!parentMessageId || !!profileMemberId;
 
   return (
     <>
@@ -40,7 +44,7 @@ export default function WorkspaceIdLayout({
               <WorkspaceSidebar />
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel minSize={20}>{children}</ResizablePanel>
+            <ResizablePanel minSize={20} defaultSize={89}>{children}</ResizablePanel>
             {showPanel && (
               <>
                 <ResizableHandle withHandle />
@@ -48,6 +52,11 @@ export default function WorkspaceIdLayout({
                   {parentMessageId ? (
                     <Thread
                       messageId={parentMessageId as Id<"messages">}
+                      onClose={onClose}
+                    />
+                  ) : profileMemberId ? (
+                    <Profile
+                      memberId={profileMemberId as Id<"members">}
                       onClose={onClose}
                     />
                   ) : (
