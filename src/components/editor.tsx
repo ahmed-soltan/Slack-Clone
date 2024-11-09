@@ -1,3 +1,5 @@
+//@typescript-eslint/no-explicit-any
+
 import { PiTextAa } from "react-icons/pi";
 import { MdSend } from "react-icons/md";
 import { ImageIcon, Smile, XIcon } from "lucide-react";

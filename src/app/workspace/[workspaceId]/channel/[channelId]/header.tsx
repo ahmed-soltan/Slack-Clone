@@ -155,6 +155,7 @@ const Header = ({ title }: HeaderProps) => {
                 <button
                   className="flex items-center gap-x-2 px-5 py-4 rounded-lg bg-white hover:bg-gray-50 text-rose-500 cursor-pointer border"
                   onClick={() => setDeleteOpen(true)}
+                  disabled={isDeletingChannel}
                 >
                   <Trash className="size-4" />
                   <p className="text-sm font-semibold">Delete Channel</p>
