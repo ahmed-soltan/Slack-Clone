@@ -37,9 +37,8 @@ export const create = mutation({
       throw new Error("Unauthorized");
     }
 
-    
-    const parsedName = args.name.replace(/\s+/g,"-").toLowerCase()
-    
+    const parsedName = args.name.replace(/\s+/g, "-").toLowerCase();
+
     const channelId = await ctx.db.insert("channels", {
       name: parsedName,
       workspaceId: args.workspaceId,
@@ -79,31 +78,37 @@ export const get = query({
 });
 
 export const getById = query({
-  args: { id: v.id("workspaces") },
+  args: { id: v.id("channels") },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
 
     if (!userId) {
-      throw new Error("Unauthorized");
+      return null;
     }
+
+    const channel = await ctx.db.get(args.id);
+
+    if (!channel) return null;
 
     const member = await ctx.db
       .query("members")
       .withIndex("by_workspace_id_user_id", (q) =>
-        q.eq("workspaceId", args.id).eq("userId", userId)
+        q.eq("workspaceId", channel.workspaceId).eq("userId", userId)
       )
       .unique();
 
-    if (!member) {
-      return null;
-    }
+    if (!member) return null;
 
-    return await ctx.db.get(args.id);
+    return channel;
   },
 });
 
 export const update = mutation({
-  args: { id: v.id("workspaces"), name: v.string() },
+  args: {
+    id: v.id("channels"),
+    workspaceId: v.id("workspaces"),
+    name: v.string(),
+  },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
 
@@ -114,7 +119,7 @@ export const update = mutation({
     const member = await ctx.db
       .query("members")
       .withIndex("by_workspace_id_user_id", (q) =>
-        q.eq("workspaceId", args.id).eq("userId", userId)
+        q.eq("workspaceId", args.workspaceId).eq("userId", userId)
       )
       .unique();
 
@@ -129,7 +134,7 @@ export const update = mutation({
 });
 
 export const remove = mutation({
-  args: { id: v.id("workspaces") },
+  args: { id: v.id("channels"), workspaceId: v.id("workspaces") },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
 
@@ -140,23 +145,12 @@ export const remove = mutation({
     const member = await ctx.db
       .query("members")
       .withIndex("by_workspace_id_user_id", (q) =>
-        q.eq("workspaceId", args.id).eq("userId", userId)
+        q.eq("workspaceId", args.workspaceId).eq("userId", userId)
       )
       .unique();
 
     if (!member || member.role !== "admin") {
       throw new Error("Unauthorized");
-    }
-
-    const [members] = await Promise.all([
-      ctx.db
-        .query("members")
-        .withIndex("by_workspace_id", (q) => q.eq("workspaceId", args.id))
-        .collect(),
-    ]);
-
-    for (const member of members) {
-      await ctx.db.delete(member._id);
     }
 
     await ctx.db.delete(args.id);

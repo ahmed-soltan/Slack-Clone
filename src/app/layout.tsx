@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import localFont from "next/font/local";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import Modals from "@/components/modals";
@@ -31,20 +32,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ConvexAuthNextjsServerProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <ConvexClientProvider>
-            <JotiaProvider>
-              <Toaster />
-              <Modals />
-              {children}
-            </JotiaProvider>
-          </ConvexClientProvider>
-        </body>
-      </html>
-    </ConvexAuthNextjsServerProvider>
+    <NuqsAdapter>
+      <ConvexAuthNextjsServerProvider>
+        <html lang="en">
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <ConvexClientProvider>
+              <JotiaProvider>
+                <Toaster />
+                <Modals />
+                {children}
+              </JotiaProvider>
+            </ConvexClientProvider>
+          </body>
+        </html>
+      </ConvexAuthNextjsServerProvider>
+    </NuqsAdapter>
   );
 }
