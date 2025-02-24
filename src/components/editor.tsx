@@ -6,11 +6,11 @@ import { ImageIcon, Smile, XIcon } from "lucide-react";
 import Quill, { QuillOptions } from "quill";
 import { Delta, Op } from "quill/core";
 import {
-    MutableRefObject,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
+  MutableRefObject,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
 } from "react";
 import Image from "next/image";
 
